@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import {HttpClientModule, HttpClient} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminComponent } from './theme/layout/admin/admin.component';
@@ -35,8 +35,8 @@ import { GuestComponent } from './theme/layout/guest/guest.component';
     ConfigurationComponent,
     GuestComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, SharedModule, BrowserAnimationsModule],
-  providers: [NavigationItem],
+  imports: [BrowserModule, AppRoutingModule, SharedModule, BrowserAnimationsModule, HttpClientModule],
+  providers: [HttpClient, NavigationItem],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

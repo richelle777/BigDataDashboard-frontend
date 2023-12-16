@@ -1,6 +1,6 @@
 <div class="row">
   <!-- [ sample-page ] start -->
-  <div class="col-xl-4 col-md-6">
+  <div class="col-xl-3 col-md-6">
     <div class="card bg-secondary-dark dashnum-card text-white overflow-hidden">
       <span class="round small"></span>
       <span class="round big"></span>
@@ -23,12 +23,68 @@
             </div>
           </div>
         </div>
-        <span class="text-white d-block fs-1 fw-bold my-2">1350 <i class="ti ti-arrow-up-right-circle opacity-50"></i></span>
-        <p class="mb-0 opacity-50">Total Pending Orders</p>
+        <span class="text-white d-block fs-1 fw-bold my-2">{{totalAccounts}}<i class="ti ti-arrow-up-right-circle opacity-50"></i></span>
+        <p class="mb-0 opacity-50">Total Accounts</p>
       </div>
     </div>
   </div>
-  <div class="col-xl-4 col-md-6">
+  <div class="col-xl-3 col-md-6">
+    <div class="card bg-primary-dark dashnum-card text-white overflow-hidden">
+      <span class="round small"></span>
+      <span class="round big"></span>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <div class="avtar">
+              <i class="text-white ti ti-user"></i>
+            </div>
+          </div>
+          <!--<div class="col-auto">
+            <div class="btn-group" ngbDropdown>
+              <a type="button" class="avtar bg-primary dropdown-toggle arrow-none" data-bs-toggle="dropdown" ngbDropdownToggle>
+                <i class="ti ti-dots"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                <li><button class="dropdown-item" type="button">Import Card</button></li>
+                <li><button class="dropdown-item" type="button">Export</button></li>
+              </ul>
+            </div>
+          </div>-->
+        </div>
+        <span class="text-white d-block fs-1 fw-bold my-2">{{totalCustomers}}<i class="ti ti-arrow-up-right-circle opacity-50"></i></span>
+        <p class="mb-0 opacity-50">Total Customers</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="card bg-secondary-dark dashnum-card text-white overflow-hidden">
+      <span class="round small"></span>
+      <span class="round big"></span>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <div class="avtar">
+              <i class="text-white ti ti-credit-card"></i>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="btn-group" ngbDropdown>
+              <a type="button" class="avtar bg-secondary dropdown-toggle arrow-none" data-bs-toggle="dropdown" ngbDropdownToggle>
+                <i class="ti ti-dots"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                <li><button class="dropdown-item" type="button">Import Card</button></li>
+                <li><button class="dropdown-item" type="button">Export</button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <span class="text-white d-block fs-1 fw-bold my-2">{{totalTransactions}}<i class="ti ti-arrow-up-right-circle opacity-50"></i></span>
+        <p class="mb-0 opacity-50">Total Transactions</p>
+      </div>
+    </div>
+  </div>
+  <!--<div class="col-xl-3 col-md-6">
     <div class="card bg-primary-dark dashnum-card text-white overflow-hidden">
       <span class="round small"></span>
       <span class="round big"></span>
@@ -75,8 +131,8 @@
         <div [ngbNavOutlet]="nav"> </div>
       </div>
     </div>
-  </div>
-  <div class="col-xl-4 col-md-12">
+  </div>-->
+  <div class="col-xl-3 col-md-12">
     <div class="card bg-primary-dark dashnum-card dashnum-card-small text-white overflow-hidden">
       <span class="round bg-primary small"></span>
       <span class="round bg-primary big"></span>
@@ -86,8 +142,8 @@
             <i class="text-white ti ti-credit-card"></i>
           </div>
           <div class="ms-2">
-            <h4 class="text-white mb-1">$203k <i class="ti ti-arrow-up-right-circle opacity-50"></i></h4>
-            <p class="mb-0 opacity-50 text-sm">Net Profit</p>
+            <h4 class="text-white mb-1">${{totalAmountTransactions}} <i class="ti ti-arrow-up-right-circle opacity-50"></i></h4>
+            <p class="mb-0 opacity-50 text-sm">Total Amount Transactions</p>
           </div>
         </div>
       </div>
@@ -101,14 +157,15 @@
             <i class="text-warning ti ti-credit-card"></i>
           </div>
           <div class="ms-2">
-            <h4 class="mb-1">$550K <i class="ti ti-arrow-up-right-circle opacity-50"></i></h4>
-            <p class="mb-0 opacity-50 text-sm">Total Revenue</p>
+            <h4 class="mb-1">${{totalAvgTransactions}} <i class="ti ti-arrow-up-right-circle opacity-50"></i></h4>
+            <p class="mb-0 opacity-50 text-sm">Average Amount transactions</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Graphic by product or card type -->
   <div class="col-xl-8 col-md-12">
     <div class="card">
       <div class="card-body">
@@ -140,25 +197,66 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <!-- distribution by Type-->
+      <div  class="col-xl-6 col-md-12" id="chartType">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title text-center fw-bolder">Distribution of users according to account tier
+            </div>
+            <apx-chart
+              [series]="chartOptionsType.series"
+              [chart]="chartOptionsType.chart"
+              [labels]="chartOptionsType.labels"
+              [fill]="chartOptionsType.fill"
+              [stroke]="chartOptionsType.stroke"
+              [responsive]="chartOptionsType.responsive"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+
+      <!-- distribution by Age-->
+      <div  class="col-xl-6 col-md-12" id="chartAge">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title text-center fw-bolder">Distribution of users according to slice age
+            </div>
+            <apx-chart
+              [series]="chartOptionsAge.series"
+              [chart]="chartOptionsAge.chart"
+              [labels]="chartOptionsAge.labels"
+              [fill]="chartOptionsAge.fill"
+              [stroke]="chartOptionsAge.stroke"
+              [responsive]="chartOptionsAge.responsive"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Recent Transactions -->
   <div class="col-xl-4 col-md-12">
     <div class="card">
       <div class="card-body">
         <div class="row mb-3 align-items-center">
           <div class="col">
-            <h4>Popular Stocks</h4>
+            <h4>Recent Transactions</h4>
           </div>
           <div class="col-auto"> </div>
         </div>
         <div class="rounded bg-light-secondary overflow-hidden mb-3">
           <div class="px-3 pt-3">
             <div class="row mb-1 align-items-start">
-              <div class="col">
-                <h5 class="text-secondary mb-0">Bajaj Finery</h5>
-                <small class="text-muted">10% Profit</small>
+              <div class="col-auto">
+                <h5 class="text-secondary mb-0">Acc ID : {{bigRecentTransaction.account_id}}</h5>
+                <small class="text-muted">{{bigRecentTransaction.transactions.date.$date.split('T')[0]}}</small>
               </div>
               <div class="col-auto">
-                <h4 class="mb-0">$1839.00</h4>
+                <h4 class="mb-0">$ {{ parseFloat(bigRecentTransaction.transactions.total).toFixed(2) }} </h4>
+                <small class="text-muted">Trans ID : {{bigRecentTransaction._id.$oid}}</small>
               </div>
             </div>
           </div>
@@ -175,17 +273,21 @@
           </div>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item px-0" *ngFor="let list of ListGroup">
+          <li class="list-group-item px-0" *ngFor="let list of recentTransactions">
             <div class="row align-items-start">
               <div class="col">
-                <h5 class="mb-0">{{ list.name }}</h5>
-                <small class="text-success">{{ list.profit }}</small>
+                <h5 class="mb-0">Acc ID : {{ list.account_id }}</h5>
+                <small class="text-success">{{ list.transactions.date.$date.split('T')[0] }}</small>
               </div>
               <div class="col-auto">
-                <h4 class="mb-0">
-                  {{ list.invest
-                  }}<span class="ms-2 align-top avtar avtar-xxs {{ list.bgColor }}"><i class="{{ list.icon }} {{ list.color }}"></i></span>
-                </h4>
+                <div class="d-flex justify-content-between">
+                  <h4 class="mb-0">$
+                    {{ parseFloat(list.transactions.total).toFixed(2)
+                    }}
+                  </h4>
+                  <span class="ms-2 align-top avtar avtar-xxs bg-light-success d-block"><i class="ti ti-chevron-up text-success"></i></span>
+                </div>
+                <small class="text-muted">Trans ID : {{bigRecentTransaction._id.$oid}}</small>
               </div>
             </div>
           </li>
@@ -196,5 +298,29 @@
       </div>
     </div>
   </div>
+
+<!--  classification of customers by adress-->
+  <div class="col-xl-12 col-md-12 col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title text-center fw-bolder">Distribution of users according to postal code
+        </div>
+        <!--The content below is only a placeholder and can be replaced.-->
+        <div id="chart">
+          <apx-chart
+            [series]="chartOptionsGroup.series"
+            [chart]="chartOptionsGroup.chart"
+            [xaxis]="chartOptionsGroup.xaxis"
+            [yaxis]="chartOptionsGroup.yaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
   <!-- [ sample-page ] end -->
 </div>
