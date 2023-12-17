@@ -211,7 +211,7 @@
       <!-- distribution by Type-->
       <div  class="col-xl-6 col-md-12" id="chartType">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body h-310">
             <div class="card-title text-center fw-bolder">Distribution of users according to account tier
             </div>
             <apx-chart
@@ -229,7 +229,7 @@
       <!-- distribution by Age-->
       <div  class="col-xl-6 col-md-12" id="chartAge">
         <div class="card">
-          <div class="card-body">
+          <div class="card-body h-310">
             <div class="card-title text-center fw-bolder">Distribution of users according to slice age
             </div>
             <apx-chart
@@ -248,7 +248,7 @@
   </div>
 
   <!-- Recent Transactions -->
-  <div class="col-xl-4 col-md-12" style="max-height: 200px;">
+  <div class="col-xl-4 col-md-12">
     <div class="card">
       <div class="card-body" style="max-height: 950px; overflow: auto;">
         <div class="row mb-3 align-items-center">
@@ -369,6 +369,23 @@
     </div>
   </div>
 
+  <!-- distribution by Product-->
+  <div  class="col-xl-6 col-md-12" id="chartProduct">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title text-center fw-bolder">Distribution of accounts according to products
+        </div>
+        <apx-chart
+          [series]="chartOptionsProduct.series"
+          [chart]="chartOptionsProduct.chart"
+          [labels]="chartOptionsProduct.labels"
+          [fill]="chartOptionsProduct.fill"
+          [stroke]="chartOptionsProduct.stroke"
+          [responsive]="chartOptionsProduct.responsive"
+        ></apx-chart>
+      </div>
+    </div>
+  </div>
 <!--  classification of customers by adress-->
 <!--  <div class="col-xl-12 col-md-12 col-12">
     <div class="card">

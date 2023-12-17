@@ -41,4 +41,8 @@ export class DashboardService {
   public getTransactionsByCodeAndPeriod(startdate, enddate){
     return this._http.get(this.baseUrl.url+`transaction_by_code_period/${startdate}/${enddate}/`)
   }
+
+  public getNbAccountByProduct(){
+    return this._http.get(this.baseUrl.url+"nb_account_by_product/")
+  }
 }

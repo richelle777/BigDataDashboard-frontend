@@ -108,6 +108,15 @@ export type ChartOptionsPlateforms = {
   title: ApexTitleSubtitle;
 };
 
+export type ChartOptionsProduct = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels:  any;
+  stroke: ApexStroke;
+  fill: ApexFill;
+};
+
 @Component({
   selector: 'app-default',
   standalone: true,
@@ -125,6 +134,8 @@ export default class DefaultComponent implements OnInit{
   public chartOptionsType: Partial<ChartOptionsType>;
   @ViewChild("chartAge") chartAge: ChartComponent;
   public chartOptionsAge: Partial<ChartOptionsAge>;
+  @ViewChild("chartProduct") chartProduct: ChartComponent;
+  public chartOptionsProduct: Partial<ChartOptionsProduct>;
   @ViewChild("chart") chartGroup: ChartComponent;
   public chartOptionsGroup: Partial<ChartOptionsGroup>;
   @ViewChild("chart") chartBestAccount: ChartComponent;
@@ -604,7 +615,7 @@ export default class DefaultComponent implements OnInit{
               breakpoint: 480,
               options: {
                 chart: {
-                  width: 200
+                  width: 200,
                 },
                 legend: {
                   position: "bottom"
@@ -613,6 +624,46 @@ export default class DefaultComponent implements OnInit{
             }
           ],
           labels: this.distributionAge,
+        };
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+  getNbAccountByProduct(){
+    this.dashboardService.getNbAccountByProduct().subscribe(
+      response => {
+        const { ids, counts } = this.splitArray(response);
+        console.log(ids)
+        console.log(counts)
+
+        this.chartOptionsProduct= {
+          series: counts,
+          chart: {
+            type: "polarArea"
+          },
+          stroke: {
+            colors: ["#fff"]
+          },
+          fill: {
+            opacity: 0.8
+          },
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: "bottom"
+                }
+              }
+            }
+          ],
+          labels: ids,
         };
       },
       error => {
@@ -703,6 +754,7 @@ export default class DefaultComponent implements OnInit{
     this.getTop10Accounts();
     this.getTop10Plateforms();
     this.getTransactionsByCodeAndPeriod();
+    this.getNbAccountByProduct();
 
    /* setTimeout(() => {
       this.monthChart = new ApexCharts(document.querySelector('#tab-chart-1'), this.monthOptions);
@@ -728,48 +780,6 @@ export default class DefaultComponent implements OnInit{
     }
   }
 
-  ListGroup = [
-    {
-      name: 'Bajaj Finery',
-      profit: '10% Profit',
-      invest: '$1839.00',
-      bgColor: 'bg-light-success',
-      icon: 'ti ti-chevron-up',
-      color: 'text-success'
-    },
-    {
-      name: 'TTML',
-      profit: '10% Loss',
-      invest: '$100.00',
-      bgColor: 'bg-light-danger',
-      icon: 'ti ti-chevron-down',
-      color: 'text-danger'
-    },
-    {
-      name: 'Reliance',
-      profit: '10% Profit',
-      invest: '$200.00',
-      bgColor: 'bg-light-success',
-      icon: 'ti ti-chevron-up',
-      color: 'text-success'
-    },
-    {
-      name: 'ATGL',
-      profit: '10% Loss',
-      invest: '$189.00',
-      bgColor: 'bg-light-danger',
-      icon: 'ti ti-chevron-down',
-      color: 'text-danger'
-    },
-    {
-      name: 'Stolon',
-      profit: '10% Profit',
-      invest: '$210.00',
-      bgColor: 'bg-light-success',
-      icon: 'ti ti-chevron-up',
-      color: 'text-success'
-    }
-  ];
 
   monthOptions = {
     chart: {
