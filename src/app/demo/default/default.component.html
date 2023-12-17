@@ -1,5 +1,5 @@
 <div class="row">
-  <!-- [ sample-page ] start -->
+
   <div class="col-xl-3 col-md-6">
     <div class="card bg-secondary-dark dashnum-card text-white overflow-hidden">
       <span class="round small"></span>
@@ -171,16 +171,26 @@
       <div class="card-body">
         <div class="row mb-3 align-items-center">
           <div class="col">
-            <small>Total Growth</small>
-            <h3>$2,324.00</h3>
+            <small>Total Amount</small>
+            <h3>${{totalAmountPeriod}}</h3>
           </div>
           <div class="col-auto">
-            <select class="form-select">
-              <option>Today</option>
-              <option selected>This Month</option>
-              <option>This Year</option>
-            </select>
+            <input type="date" id="startDate" name="startDate" class="input-date" [(ngModel)]="startDate" (ngModelChange)="onDateChange()">
+            <span> to </span>
+            <input type="date" id="endDate" name="endDate" class="input-date" [(ngModel)]="endDate" (ngModelChange)="onDateChange()">
           </div>
+          <!--<div class="col-auto">
+            <label>Select Date Range:</label>
+            <mat-form-field>
+              <mat-label>Enter a date range</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Start date">
+                <input matEndDate placeholder="End date">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>-->
         </div>
         <div id="growthChart">
           <apx-chart
@@ -238,9 +248,9 @@
   </div>
 
   <!-- Recent Transactions -->
-  <div class="col-xl-4 col-md-12">
+  <div class="col-xl-4 col-md-12" style="max-height: 200px;">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body" style="max-height: 950px; overflow: auto;">
         <div class="row mb-3 align-items-center">
           <div class="col">
             <h4>Recent Transactions</h4>
@@ -299,13 +309,73 @@
     </div>
   </div>
 
+  <!-- Distribution Top 10 Best Accounts -->
+  <div class="col-xl-4 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div id="chartBestAccount">
+          <apx-chart
+            [series]="chartOptionsBestAccount.series"
+            [chart]="chartOptionsBestAccount.chart"
+            [dataLabels]="chartOptionsBestAccount.dataLabels"
+            [plotOptions]="chartOptionsBestAccount.plotOptions"
+            [xaxis]="chartOptionsBestAccount.xaxis"
+            [colors]="chartOptionsBestAccount.colors"
+            [title]="chartOptionsBestAccount.title"
+            [legend]="chartOptionsBestAccount.legend"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribution Top 10 Bad Accounts -->
+  <div class="col-xl-4 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div id="chartBadAccount">
+          <apx-chart
+            [series]="chartOptionsBadAccount.series"
+            [chart]="chartOptionsBadAccount.chart"
+            [dataLabels]="chartOptionsBadAccount.dataLabels"
+            [plotOptions]="chartOptionsBadAccount.plotOptions"
+            [xaxis]="chartOptionsBadAccount.xaxis"
+            [colors]="chartOptionsBadAccount.colors"
+            [title]="chartOptionsBadAccount.title"
+            [legend]="chartOptionsBadAccount.legend"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribution Top 10 Plateforms -->
+  <div class="col-xl-4 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div id="chartPlateform">
+          <apx-chart
+            [series]="chartOptionsPlateform.series"
+            [chart]="chartOptionsPlateform.chart"
+            [dataLabels]="chartOptionsPlateform.dataLabels"
+            [plotOptions]="chartOptionsPlateform.plotOptions"
+            [xaxis]="chartOptionsPlateform.xaxis"
+            [colors]="chartOptionsPlateform.colors"
+            [title]="chartOptionsPlateform.title"
+            [legend]="chartOptionsPlateform.legend"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!--  classification of customers by adress-->
-  <div class="col-xl-12 col-md-12 col-12">
+<!--  <div class="col-xl-12 col-md-12 col-12">
     <div class="card">
       <div class="card-body">
         <div class="card-title text-center fw-bolder">Distribution of users according to postal code
         </div>
-        <!--The content below is only a placeholder and can be replaced.-->
+        &lt;!&ndash;The content below is only a placeholder and can be replaced.&ndash;&gt;
         <div id="chart">
           <apx-chart
             [series]="chartOptionsGroup.series"
@@ -317,10 +387,7 @@
       </div>
     </div>
 
-  </div>
+  </div>-->
 
 
-
-
-  <!-- [ sample-page ] end -->
 </div>

@@ -30,4 +30,15 @@ export class DashboardService {
     return this._http.get(this.baseUrl.url+"group_by_code/")
   }
 
+  public getTop10Accounts(){
+    return this._http.get(this.baseUrl.url+"best_bad_accounts/")
+  }
+
+  public getTop10Plateforms(){
+    return this._http.get(this.baseUrl.url+"top-products/")
+  }
+
+  public getTransactionsByCodeAndPeriod(startdate, enddate){
+    return this._http.get(this.baseUrl.url+`transaction_by_code_period/${startdate}/${enddate}/`)
+  }
 }

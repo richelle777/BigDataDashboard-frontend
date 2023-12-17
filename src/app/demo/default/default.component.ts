@@ -2,6 +2,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { HammerModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+
+
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
@@ -25,6 +33,7 @@ import {
 } from 'ng-apexcharts';
 import {DashboardService} from "../../theme/shared/services/dashboard.service";
 import {Subject, takeUntil} from "rxjs";
+
 
 
 export type ChartOptions = {
@@ -65,10 +74,44 @@ export type ChartOptionsGroup = {
   yaxis: ApexYAxis;
 };
 
+// Chart pour afficher les comptes avec le plus/moins de transactions
+export type ChartOptionsBestAccount = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  colors: string[];
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+};
+
+export type ChartOptionsBadAccount = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  colors: string[];
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+};
+
+export type ChartOptionsPlateforms = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  colors: string[];
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+};
+
 @Component({
   selector: 'app-default',
   standalone: true,
-  imports: [CommonModule, SharedModule, NgApexchartsModule],
+  imports: [CommonModule, SharedModule, NgApexchartsModule, MatFormFieldModule, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
 })
@@ -82,8 +125,24 @@ export default class DefaultComponent implements OnInit{
   public chartOptionsType: Partial<ChartOptionsType>;
   @ViewChild("chartAge") chartAge: ChartComponent;
   public chartOptionsAge: Partial<ChartOptionsAge>;
-  @ViewChild("chart") chart: ChartComponent;
+  @ViewChild("chart") chartGroup: ChartComponent;
   public chartOptionsGroup: Partial<ChartOptionsGroup>;
+  @ViewChild("chart") chartBestAccount: ChartComponent;
+  public chartOptionsBestAccount: Partial<ChartOptionsBestAccount>;
+  @ViewChild("chart") chartBadAccount: ChartComponent;
+  public chartOptionsBadAccount: Partial<ChartOptionsBadAccount>;
+  @ViewChild("chart") chartPlateform: ChartComponent;
+  public chartOptionsPlateform: Partial<ChartOptionsPlateforms>;
+
+
+  public today: Date = new Date();
+  public currentYear: number = this.today.getFullYear();
+  public currentMonth: number = this.today.getMonth();
+  public currentDay: number = this.today.getDate();
+  public minDate: Object = new Date(this.currentYear, this.currentMonth, 15);
+  public maxDate: Object =  new Date(this.currentYear, this.currentMonth+1, 15);
+
+  public range2 = { start: new Date(2020, 4, 20), end: new Date(2020, 4, 25) };
 
   monthChart: any;
   yearChart: any;
@@ -96,11 +155,25 @@ export default class DefaultComponent implements OnInit{
   bigRecentTransaction: any;
   colorChart = ['#673ab7'];
 
+  id_best_account: any;
+  total_best_amount: any;
+  id_bad_account: any;
+  total_bad_amount: any;
+
+  id_code: any;
+  total_amount_code: any;
+
+
   tierAccount: any[];
   totalTierAccount: any[];
 
   distributionAge: any[];
   totaldistributionAge: any[];
+
+  totalAmountPeriod: any;
+
+  startDate = '2003-01-09';
+  endDate= '2003-08-09';
 
   chartGithubIssues: ApexOptions = {};
   chartTaskDistribution: ApexOptions = {};
@@ -115,66 +188,7 @@ export default class DefaultComponent implements OnInit{
 
   // Constructor
   constructor( public dashboardService : DashboardService) {
-    this.chartOptions = {
-      series: [
-        {
-          name: 'Investment',
-          data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
-        },
-        {
-          name: 'Loss',
-          data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
-        },
-        {
-          name: 'Profit',
-          data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
-        },
-        {
-          name: 'Maintenance',
-          data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
-        }
-      ],
-      dataLabels: {
-        enabled: false
-      },
-      chart: {
-        type: 'bar',
-        height: 480,
-        stacked: true,
-        toolbar: {
-          show: true
-        }
-      },
-      colors: ['#90caf9', '#1e88e5', '#673ab7', '#ede7f6'],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -10,
-              offsetY: 0
-            }
-          }
-        }
-      ],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '50%'
-        }
-      },
-      xaxis: {
-        type: 'category',
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      },
-      grid: {
-        strokeDashArray: 4
-      },
-      tooltip: {
-        theme: 'dark'
-      }
-    };
+
     this.chartOptions1 = {
       chart: {
         type: 'area',
@@ -230,7 +244,6 @@ export default class DefaultComponent implements OnInit{
         tickAmount: 7
       }
     };
-
   }
 
   splitArray(arr) {
@@ -239,12 +252,67 @@ export default class DefaultComponent implements OnInit{
 
     arr.forEach((item) => {
       ids.push(item._id);
-      counts.push(item.count);
+      counts.push(item?.count || item?.total_amount?.toFixed(2) || item?.total);
     });
 
     return { ids, counts };
   }
 
+  formatTransactionsForChart(transactions: any): any {
+    const formattedData = [];
+    const months = [];
+    let totalAmount = 0;
+    const monthsMap = {
+      '1': 'Jan', '2': 'Feb', '3': 'Mar',
+      '4': 'Apr', '5': 'May', '6': 'Jun',
+      '7': 'Jul', '8': 'Aug', '9': 'Sep',
+      '10': 'Oct', '11': 'Nov', '12': 'Dec'
+    };
+
+
+    // Group transactions by transaction_code
+    const groupedByCode = transactions.reduce((result, transaction) => {
+      const code = transaction._id.transaction_code;
+      if (!result[code]) {
+        result[code] = [];
+      }
+      // Accumulate total amount
+      totalAmount += transaction.total_amount;
+      result[code].push(transaction);
+      return result;
+    }, {});
+
+    // Group transactions by month
+    const groupedByMonth = transactions.reduce((result, transaction) => {
+      const month = transaction._id.month;
+      if (!result[month]) {
+        result[month] = [];
+      }
+      result[month].push(transaction);
+      return result;
+    }, {});
+
+    // Format data for chart
+    for (const code in groupedByCode) {
+      if (groupedByCode.hasOwnProperty(code)) {
+        const data = groupedByCode[code].map(item => item.total_amount.toFixed(2));
+        formattedData.push({ name: code, data });
+      }
+    }
+
+    // Format data for chart
+    for (const month in groupedByMonth) {
+      months.push(monthsMap[month]);
+    }
+
+    this.totalAmountPeriod = totalAmount.toFixed(2);
+
+    return { months, data: formattedData};
+  }
+
+  onDateChange() {
+    this.getTransactionsByCodeAndPeriod();
+  }
   groupByCode(){
     this.dashboardService.groupByCode().subscribe(
       response => {
@@ -319,7 +387,7 @@ export default class DefaultComponent implements OnInit{
               breakpoint: 480,
               options: {
                 chart: {
-                  width: 200
+                  width: 200,
                 },
                 legend: {
                   position: "bottom"
@@ -335,6 +403,183 @@ export default class DefaultComponent implements OnInit{
       }
     )
   }
+
+  getTop10Accounts(){
+    this.dashboardService.getTop10Accounts().subscribe(
+      response => {
+        const topBest = this.splitArray(response['top_accounts']);
+        const topBad = this.splitArray(response['bottom_accounts']);
+        this.id_best_account = topBest.ids;
+        this.total_best_amount = topBest.counts;
+        this.id_bad_account = topBad.ids;
+        this.total_bad_amount = topBad.counts;
+        this.chartOptionsBestAccount = {
+          series: [
+            {
+              name: "Best Accounts",
+              data: this.total_best_amount
+            }
+          ],
+          chart: {
+            type: "bar",
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              borderRadius: 0,
+              horizontal: true,
+              barHeight: "80%",
+              isFunnel: true
+            }
+          },
+          colors: [
+            "#58147d",
+            "#E55A89",
+            "#D863B1",
+            "#CA6CD8",
+            "#B57BED",
+            "#8D95EB",
+            "#62ACEA",
+            "#4BC3E6"
+          ],
+          dataLabels: {
+            enabled: true,
+            formatter: function (val, opt) {
+              return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+            },
+            dropShadow: {
+              enabled: true
+            }
+          },
+          title: {
+            text: "TOP 10 OF BEST ACCOUNTS",
+            align: "center"
+          },
+          xaxis: {
+            categories: this.id_best_account
+          },
+          legend: {
+            show: true
+          }
+        };
+        this.chartOptionsBadAccount = {
+          series: [
+            {
+              name: "Bad Accounts",
+              data: this.total_bad_amount.slice().reverse()
+            }
+          ],
+          chart: {
+            type: "bar",
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              borderRadius: 0,
+              horizontal: true,
+              barHeight: "80%",
+              isFunnel: true
+            }
+          },
+          colors: [
+            "#F44F5E",
+            "#E55A89",
+            "#D863B1",
+            "#CA6CD8",
+            "#B57BED",
+            "#8D95EB",
+            "#62ACEA",
+            "#4BC3E6"
+          ],
+          dataLabels: {
+            enabled: true,
+            formatter: function (val, opt) {
+              return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+            },
+            dropShadow: {
+              enabled: true
+            }
+          },
+          title: {
+            text: "TOP 10 OF BAD ACCOUNTS",
+            align: "center"
+          },
+          xaxis: {
+            categories: this.id_bad_account
+          },
+          legend: {
+            show: true
+          }
+        };
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+  getTop10Plateforms(){
+    this.dashboardService.getTop10Plateforms().subscribe(
+      response => {
+        const {ids, counts} = this.splitArray(response)
+        console.log(ids)
+        console.log(counts)
+        this.chartOptionsPlateform = {
+          series: [
+            {
+              name: "Best Plateforms",
+              data: counts
+            }
+          ],
+          chart: {
+            type: "bar",
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              borderRadius: 0,
+              horizontal: true,
+              barHeight: "80%",
+              isFunnel: true
+            }
+          },
+          colors: [
+            "#58147d",
+            "#E55A89",
+            "#D863B1",
+            "#CA6CD8",
+            "#B57BED",
+            "#8D95EB",
+            "#62ACEA",
+            "#4BC3E6"
+          ],
+          dataLabels: {
+            enabled: true,
+            formatter: function (val, opt) {
+              return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+            },
+            dropShadow: {
+              enabled: true
+            }
+          },
+          title: {
+            text: "TOP 10 OF BEST PLATFORMS",
+            align: "center"
+          },
+          xaxis: {
+            categories: ids
+          },
+          legend: {
+            show: true
+          }
+        };
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
 
   getCustomersByDate(){
     this.dashboardService.getCustomersByDate().subscribe(
@@ -376,13 +621,88 @@ export default class DefaultComponent implements OnInit{
     )
   }
 
+  getTransactionsByCodeAndPeriod(){
+    this.dashboardService.getTransactionsByCodeAndPeriod(this.startDate, this.endDate).subscribe(
+      response => {
+        const { months, data } = this.formatTransactionsForChart(response);
+       /* [
+          {
+            name: 'Sell',
+            data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
+          },
+          {
+            name: 'Loss',
+            data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
+          },
+          {
+            name: 'Profit',
+            data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
+          },
+          {
+            name: 'Maintenance',
+            data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+          }
+        ]*/
+        this.chartOptions = {
+          series: data,
+          dataLabels: {
+            enabled: false
+          },
+          chart: {
+            type: 'bar',
+            height: 480,
+            stacked: true,
+            toolbar: {
+              show: true
+            }
+          },
+          colors: ['#b92664', '#1e88e5'],
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                legend: {
+                  position: 'bottom',
+                  offsetX: -10,
+                  offsetY: 0
+                }
+              }
+            }
+          ],
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '50%'
+            }
+          },
+          xaxis: {
+            type: 'category',
+            categories: months
+          },
+          grid: {
+            strokeDashArray: 4
+          },
+          tooltip: {
+            theme: 'dark'
+          }
+        };
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
   // Life cycle events
   ngOnInit(): void {
     this.getAllTotal();
     this.getRecentTransactions();
     this.getAccountByTier();
     this.getCustomersByDate();
-    this.groupByCode();
+    /*this.groupByCode();*/
+    this.getTop10Accounts();
+    this.getTop10Plateforms();
+    this.getTransactionsByCodeAndPeriod();
 
    /* setTimeout(() => {
       this.monthChart = new ApexCharts(document.querySelector('#tab-chart-1'), this.monthOptions);
